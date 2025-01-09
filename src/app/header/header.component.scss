@@ -1,0 +1,21 @@
+
+.header {
+  background:darkgrey;
+  margin: 0;
+  display: flex;
+  padding-left: 15%;
+  padding-right:15%;
+  align-items: center;
+  justify-content: space-between;
+}
+.auth {
+  display:flex;
+  gap:14px;
+}
+ul {
+  list-style-type: none;
+}
+.home-link {
+  text-decoration: none;
+  color: blue;
+}
