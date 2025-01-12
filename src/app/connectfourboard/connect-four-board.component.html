@@ -1,0 +1,16 @@
+
+<h1>Connect Four</h1>
+<div id="board">
+  <ng-container *ngFor="let row of board">
+    <div *ngFor="let field of row" class="square" >
+      @if(field.player){
+        <div class ="circle {{field.player.piece}}" (click)="onTurn(field)"></div>
+      } @else {
+        <div class ="circle background-white" (click)="onTurn(field)"></div>
+      }
+
+    </div>
+  </ng-container>
+
+
+</div>

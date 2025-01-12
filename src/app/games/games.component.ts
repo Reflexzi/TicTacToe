@@ -1,11 +1,9 @@
 import { Component } from '@angular/core';
-import {NgOptimizedImage} from '@angular/common';
+
 
 @Component({
   selector: 'app-games',
-  imports: [
-    NgOptimizedImage
-  ],
+  imports: [],
   templateUrl: './games.component.html',
   styleUrl: './games.component.scss'
 })
