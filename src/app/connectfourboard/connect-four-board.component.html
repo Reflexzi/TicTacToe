@@ -1,16 +1,22 @@
 
 <h1>Connect Four</h1>
+<h2>{{currentPlayer.name}}</h2>
+@if(winner) {
+  <h1>the winner is {{winner.name}}</h1>
+}
 <div id="board">
-  <ng-container *ngFor="let row of board">
-    <div *ngFor="let field of row" class="square" >
-      @if(field.player){
-        <div class ="circle {{field.player.piece}}" (click)="onTurn(field)"></div>
-      } @else {
-        <div class ="circle background-white" (click)="onTurn(field)"></div>
-      }
-
-    </div>
-  </ng-container>
-
-
+  @for(row of board; track row; let y = $index){
+    @for(field of row; track field; let x = $index){
+      <div class="square" >
+        @if(field.player){
+          <div class ="circle {{field.player.piece}}" (click)="onTurn(x)"></div>
+        } @else {
+          <div class ="circle background-white" (click)="onTurn(x)"></div>
+        }
+      </div>
+    }
+  }
+</div>
+<div class="button">
+  <input type="button" value="Reset Button" (click)="setup()">
 </div>

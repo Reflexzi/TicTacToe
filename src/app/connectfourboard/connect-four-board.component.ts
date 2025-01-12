@@ -8,8 +8,8 @@ import {CommonModule} from '@angular/common';
   styleUrl: './connect-four-board.component.scss'
 })
 export class ConnectFourBoardComponent {
-  rowSize = 7;
-  colSize = 6;
+  rowSize = 6;
+  colSize = 7;
   board!: Field[][];
   player1!: Player;
   player2!: Player;
@@ -24,6 +24,8 @@ export class ConnectFourBoardComponent {
 
   setup(): void {
     this.board = [];
+    this.isOver = false;
+    this.winner = undefined;
     for(let i = 0; i < this.rowSize; i++) {
       const row: Field[] = [];
       for(let j = 0 ; j < this.colSize; j++) {
@@ -32,11 +34,13 @@ export class ConnectFourBoardComponent {
       this.board.push(row);
     }
     this.player1 = new Player("Player1", "background-red")
-    this.player2 = new Player("Player1", "background-yellow")
+    this.player2 = new Player("Player2", "background-yellow")
     this.currentPlayer = this.player1;
   }
 
-  onTurn(field: Field): void {
+  onTurn(x: number): void {
+    const field = this.getNextEmptyField(x);
+    if(!field) return
     if(field.player || this.isOver) return;
     field.player = this.currentPlayer;
     this.isOver = this.checkWin();
@@ -53,40 +57,45 @@ export class ConnectFourBoardComponent {
     }
   }
 
-  checkWin(): boolean {
-    for(let i = 0; i < this.board.length; i++) {
-      if(this.board[i].every(field => field.player === this.currentPlayer)) {
-        return true;
+  private getNextEmptyField(x: number): Field | undefined {
+    for(let row = this.rowSize-1; row >= 0; row--) {
+      if (!this.board[row][x].player) {
+        return this.board[row][x];
       }
     }
-    for(let col = 0; col < 3; col++) {
-      let win = true;
-      for(let row = 0; row < 3; row++) {
-        if(this.board[row][col].player !== this.currentPlayer) {
-          win = false;
-          break;
+    return
+  }
+
+  checkWin(): boolean {
+    const direction = [
+      { dx: 1, dy: 0},
+      { dx: 0, dy: 1},
+      { dx: 1, dy: 1},
+      { dx: 1, dy: -1},
+    ];
+    for(let row = 0; row < this.rowSize; row++) {
+      for(let col = 0; col < this.colSize; col++) {
+        const field = this.board[row][col];
+        if(!field.player || field.player !== this.currentPlayer) continue
+        for(const { dx, dy } of direction) {
+          let count = 1;
+          for(let step = 1; step < 4; step++) {
+            const newRow = row + dy * step;
+            const newCol = col + dx * step;
+            if(newRow < 0 || newRow >= this.rowSize || newCol < 0 || newCol >= this.colSize) break;
+            if(this.board[newRow][newCol].player === this.currentPlayer) {
+              count++;
+            } else {
+              break;
+            }
+          }
+          if(count === 4) return true;
         }
       }
-      if(win) return true;
     }
-    let win = true;
-    for(let i = 0; i < 3; i++) {
-      if(this.board[i][i].player !== this.currentPlayer) {
-        win = false;
-        break
-      }
-    }
-    if(win) return true;
 
-    win = true;
-    for(let i = 0; i < 3; i++) {
-      if(this.board[i][2-i].player !== this.currentPlayer) {
-        win = false;
-        break
-      }
-    }
-    if(win) return true;
-    return false;
+
+    return false
   }
 
   checkTie(): boolean {

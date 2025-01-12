@@ -1,12 +1,12 @@
-
 <h1>Tic Tac Toe</h1>
+<h2>{{currentPlayer.name}}</h2>
 @if(winner) {
   <h1>the winner is {{winner.name}}</h1>
 }
 @if(isTied) {
   <h1>game is a Tie</h1>
 }
-<div id="board"  >
+<div id="board">
   <ng-container *ngFor="let row of board">
     <div *ngFor="let field of row" class="square" (click)="onTurn(field)">
       @if(field.player){
